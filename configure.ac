@@ -9,5 +9,8 @@ AC_CONFIG_FILES([
  src/Makefile
  lib/Makefile
 ])
+
+AC_CHECK_HEADERS(malloc.h)
+
 AC_PROG_RANLIB
 AC_OUTPUT
