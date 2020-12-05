@@ -68,7 +68,11 @@ static void bst_fill_level(struct bst_node *root, struct int_array *arr,
 			   int level, int cur_level)
 {
 	if (root == NULL) {
-		array_push_back(arr, INT_MIN);
+		int n, i;
+
+		n = 1 << (level - cur_level - 1);
+		for (i = 0; i < n; i++)
+			array_push_back(arr, INT_MIN);
 		return;
 	}
 	cur_level++;
