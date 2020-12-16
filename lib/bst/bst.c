@@ -42,6 +42,112 @@ struct bst_node *bst_find(struct bst_node *root, int key)
 		return bst_find(root->right, key);
 }
 
+/*
+ *         3
+ *    2        4
+ * predecessor for 4 is 3
+ */
+/*
+ *
+Input:
+	v - root node of binary search tree
+	k - key to look a preceding key of
+	predecessor - tree node containg the biggest key smaller than key x
+	keyfound - bool, true if key x is already found
+
+Output:
+	predecessor - tree node containg the biggest key smaller than key x
+	keyfound - bool, true if key x is already found
+
+Usage:
+	predecessor = 0
+	keyfound = false
+	v = root
+	predecessor = BSTPredecessor(v, k, precessor, keyfound)
+
+Data types
+	struct node
+		left - pointer to node
+		right - pointer to node
+		key k
+	key
+		int
+
+BSTPredecessor(node v, key x, node predecessor, bool keyfound)
+	if v == 0
+		return predecessor
+
+	if x == k(v)
+		keyfound = true
+		return BSTPredecessor(l(v), x, predecessor, keyfound)
+
+	if ketfound
+		tmp = v
+		while tmp
+			predecessor = tmp
+			tmp = r(tmp)
+		return predecessor
+
+	if (x < k(v))
+		return BSTPredecessir(l(v), x, predecessor, keyfound)
+	else
+		predecessor = v
+		return BSTPredecessor(r(v), x, predecessor, keyfound)
+ *
+ */
+struct bst_node *bst_predecessor(struct bst_node *root, int key, struct bst_node *pred, int *key_found)
+{
+	if (root == NULL)
+		return pred;
+
+	if (root->key == key) {
+		*key_found = 1;
+		/* step to left */
+		return bst_predecessor(root->left, key, pred, key_found);
+	}
+
+	if (*key_found) {
+		struct bst_node *tmp;
+
+		tmp = root;
+		while (tmp) {
+			pred = tmp;
+			tmp = tmp->right;
+		}
+		return pred;
+	}
+
+	if (root->key > key) {
+		return bst_predecessor(root->left, key, pred, key_found);
+	} else {
+		pred = root;
+		return bst_predecessor(root->right, key, pred, key_found);
+	}
+}
+
+#if 0
+struct bst_node *bst_delete(struct bst_node **root, int key)
+{
+	if (*root == NULL)
+		return BST_DELETE_NOTFOUND;
+
+	if (key < (*root)->key) {
+		return bst_delete(&((*root)->left), key);
+	}
+	if (key > (*root)->key) {
+		return bst_delete(&((*root)->right), key);
+	}
+	if ((*root)->left == NULL && (*root)->right == NULL) {
+		*root = NULL;
+		return BST_DELETE_OK;
+	}
+	if ((*root)->left == NULL) {
+	}
+	if ((*root)->right == NULL) {
+	}
+}
+#endif
+
 void bst_destroy(struct bst_node *root)
 {
 	if (root == NULL)

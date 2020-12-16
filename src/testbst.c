@@ -9,7 +9,8 @@ int main(void)
 {
 	struct bst_node *root;
 /*	int data[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};*/
-	int data[5] = {2, 1, 3, 9, 7};
+	int data[5] = {1, 2, 3, 4, 5};
+/*	int data[5] = {2, 1, 3, 9, 7};*/
 	int i;
 
 	printf(PACKAGE_STRING"\n");
@@ -19,8 +20,24 @@ int main(void)
 	for (i = 0; i < sizeof(data)/sizeof(data[0]); i++) {
 		bst_insert(&root, data[i]);
 	}
+	bst_insert(&root, -1);
+	bst_insert(&root, -3);
+	bst_insert(&root, -2);
 
 	bst_show_tree(root);
+
+
+	{
+		/* test predecessor */
+		struct bst_node *p;
+		int key;
+		int key_found = 0;
+
+		key = -3;
+		p = bst_predecessor(root, key, NULL, &key_found);
+		printf("key %d -> pred %d\n", key, p ? p->key : 5555555);
+	}
+
 
 	bst_destroy(root);
 	return 0;
