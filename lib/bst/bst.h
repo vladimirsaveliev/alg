@@ -23,5 +23,5 @@ int bst_depth(struct bst_node *root, int depth);
 void bst_show_line(struct bst_node *root);
 void bst_show_tree(struct bst_node *root);
 
-struct bst_node *bst_predecessor(struct bst_node *root, int key, struct bst_node *pred, int *key_found);
+struct bst_node *bst_predecessor(struct bst_node *root, int key, struct bst_node *pred);
 

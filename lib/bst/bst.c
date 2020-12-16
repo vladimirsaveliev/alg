@@ -53,17 +53,14 @@ Input:
 	v - root node of binary search tree
 	k - key to look a preceding key of
 	predecessor - tree node containg the biggest key smaller than key x
-	keyfound - bool, true if key x is already found
 
 Output:
 	predecessor - tree node containg the biggest key smaller than key x
-	keyfound - bool, true if key x is already found
 
 Usage:
 	predecessor = 0
-	keyfound = false
 	v = root
-	predecessor = BSTPredecessor(v, k, precessor, keyfound)
+	predecessor = BSTPredecessor(v, k, precessor)
 
 Data types
 	struct node
@@ -73,43 +70,35 @@ Data types
 	key
 		int
 
-BSTPredecessor(node v, key x, node predecessor, bool keyfound)
+BSTPredecessor(node v, key x, node predecessor)
 	if v == 0
 		return predecessor
 
 	if x == k(v)
-		keyfound = true
-		return BSTPredecessor(l(v), x, predecessor, keyfound)
-
-	if ketfound
-		tmp = v
+		// predecessor is the rightmost node of left subtree (if left subtree exists
+		tmp = l(v)
 		while tmp
 			predecessor = tmp
 			tmp = r(tmp)
 		return predecessor
 
 	if (x < k(v))
-		return BSTPredecessir(l(v), x, predecessor, keyfound)
+		return BSTPredecessir(l(v), x, predecessor)
 	else
+		// go to right, save new predecessor
 		predecessor = v
-		return BSTPredecessor(r(v), x, predecessor, keyfound)
+		return BSTPredecessor(r(v), x, predecessor)
  *
  */
-struct bst_node *bst_predecessor(struct bst_node *root, int key, struct bst_node *pred, int *key_found)
+struct bst_node *bst_predecessor(struct bst_node *root, int key, struct bst_node *pred)
 {
 	if (root == NULL)
 		return pred;
 
 	if (root->key == key) {
-		*key_found = 1;
-		/* step to left */
-		return bst_predecessor(root->left, key, pred, key_found);
-	}
-
-	if (*key_found) {
 		struct bst_node *tmp;
 
-		tmp = root;
+		tmp = root->left;
 		while (tmp) {
 			pred = tmp;
 			tmp = tmp->right;
@@ -118,10 +107,10 @@ struct bst_node *bst_predecessor(struct bst_node *root, int key, struct bst_node
 	}
 
 	if (root->key > key) {
-		return bst_predecessor(root->left, key, pred, key_found);
+		return bst_predecessor(root->left, key, pred);
 	} else {
 		pred = root;
-		return bst_predecessor(root->right, key, pred, key_found);
+		return bst_predecessor(root->right, key, pred);
 	}
 }
 

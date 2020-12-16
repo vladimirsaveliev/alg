@@ -31,11 +31,12 @@ int main(void)
 		/* test predecessor */
 		struct bst_node *p;
 		int key;
-		int key_found = 0;
 
-		key = -3;
-		p = bst_predecessor(root, key, NULL, &key_found);
-		printf("key %d -> pred %d\n", key, p ? p->key : 5555555);
+		for (i = 0; i < sizeof(data)/sizeof(data[0]); i++) {
+			key = data[i];
+			p = bst_predecessor(root, key, NULL);
+			printf("key %d -> pred %d\n", key, p ? p->key : 5555555);
+		}
 	}
 
 
