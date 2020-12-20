@@ -1,6 +1,6 @@
-bin_PROGRAMS = testbst
+bin_PROGRAMS = test
 
-testbst_SOURCES = testbst.c
+test_SOURCES = test.c testbst.c
 
-testbst_LDADD = ../lib/libbst.a ../lib/libarray.a
-testbst_CFLAGS = -Wall
+test_LDADD = ../lib/libbst.a ../lib/libarray.a
+test_CFLAGS = -Wall
