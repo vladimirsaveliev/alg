@@ -3,6 +3,8 @@
 #include <stdlib.h>
 
 int testbst(void);
+int testgcd(void);
+int test2darray(void);
 
 int main(void)
 {
@@ -13,6 +15,8 @@ int main(void)
 
 		printf("1 - test BST\n");
 		printf("2 - test AVL tree\n");
+		printf("3 - greatest common divisor\n");
+		printf("4 - array\n");
 		printf("0 - quit\n");
 		scanf(" %c", &c);
 		switch (c) {
@@ -21,6 +25,12 @@ int main(void)
 			break;
 		case '2':
 			printf("not ready\n");
+			break;
+		case '3':
+			testgcd();
+			break;
+		case '4':
+			test2darray();
 			break;
 		case '0':
 			exit(0);
