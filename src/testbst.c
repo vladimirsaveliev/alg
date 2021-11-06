@@ -1,5 +1,6 @@
 #include <config.h>
 #include <stdio.h>
+#include <malloc.h>
 #include "lib/bst/bst.h"
 
 #if 1
@@ -30,6 +31,7 @@ int testbst(void)
 		printf("   \x1b[37;1m1 - insert element\x1b[0m\n");
 		printf("   2 - delete element\n");
 		printf("   3 - print BST\n");
+        printf("   4 - built tree by array\n");
 		printf("   0 - return to main menu\n");
 
 		scanf(" %c", &c);
@@ -38,15 +40,50 @@ int testbst(void)
 			printf("      key to insert: ");
 			scanf(" %d", &key);
 			bst_insert(&root, key);
-			break;
+
+            printf("\x1B[36;1m");
+			bst_show_tree(root);
+			printf("\x1b[0m");
+            break;
 		case '2':
-			printf("delete\n");
+			printf("      key to delete: ");
+			scanf(" %d", &key);
+			bst_delete(&root, key);
+
+			printf("\x1B[36;1m");
+			bst_show_tree(root);
+			printf("\x1b[0m");
 			break;
+
 		case '3':
 			printf("\x1B[36;1m");
 			bst_show_tree(root);
 			printf("\x1b[0m");
 			break;
+
+        case '4': {
+			int nr;
+			int *arr;
+			int i;
+
+			printf("      number of keys: ");
+			scanf(" %d", &nr);
+            arr = malloc(sizeof(int) * nr);
+            if (arr == NULL) {
+                perror("malloc failed");
+                break;
+            }
+            for (i = 0; i < nr; i++) {
+                scanf(" %d", &arr[i]);
+            }
+            build_pb_bst(&root, arr, nr);
+            free(arr);
+
+            printf("\x1B[36;1m");
+			bst_show_tree(root);
+			printf("\x1b[0m");
+            break;
+        }
 		case '0':
 			bst_destroy(root);
 			return 0;

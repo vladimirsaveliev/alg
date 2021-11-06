@@ -27,11 +27,15 @@ int main(void)
 			printf("not ready\n");
 			break;
 		case '3':
-			testgcd();
+			printf("not ready\n");
 			break;
+/*			testgcd();
+			break;*/
 		case '4':
-			test2darray();
+			printf("not ready\n");
 			break;
+/*			test2darray();
+			break;*/
 		case '0':
 			exit(0);
 		}

@@ -8,6 +8,9 @@
 #include "bst.h"
 #include "../array/array.h"
 
+/*
+ * insert key into tree
+ */
 int bst_insert(struct bst_node **root, int key)
 {
 	if (*root == NULL) {
@@ -114,12 +117,26 @@ struct bst_node *bst_predecessor(struct bst_node *root, int key, struct bst_node
 	}
 }
 
-#if 0
-struct bst_node *bst_delete(struct bst_node **root, int key)
+/* AG1, lecture 6, p. 9 */
+struct bst_node *bst_min(struct bst_node *v)
 {
-	if (*root == NULL)
-		return BST_DELETE_NOTFOUND;
+    if (v->left == NULL) {
+        return v;
+    }
+    return bst_min(v->left);
+}
 
+/*
+ * AG1, lecture 6, p. 14
+ */
+int bst_delete(struct bst_node **root, int key)
+{
+    struct bst_node *s;
+
+	if (*root == NULL) {
+        /* empty root */
+		return BST_DELETE_NOTFOUND;
+    }
 	if (key < (*root)->key) {
 		return bst_delete(&((*root)->left), key);
 	}
@@ -127,15 +144,26 @@ struct bst_node *bst_delete(struct bst_node **root, int key)
 		return bst_delete(&((*root)->right), key);
 	}
 	if ((*root)->left == NULL && (*root)->right == NULL) {
+        /* no children */
 		*root = NULL;
 		return BST_DELETE_OK;
 	}
 	if ((*root)->left == NULL) {
+        /* only right child */
+        *root = (*root)->right;
+        return BST_DELETE_OK;
 	}
 	if ((*root)->right == NULL) {
+        /* only left child */
+        *root = (*root)->left;
+        return BST_DELETE_OK;
 	}
+	/* two children */
+    s = bst_min((*root)->right);
+    (*root)->key = s->key;
+    bst_delete(&((*root)->right), s->key);
+    return BST_DELETE_OK;
 }
-#endif
 
 void bst_destroy(struct bst_node *root)
 {
