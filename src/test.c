@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 int testbst(void);
+int testavl(void);
 int testgcd(void);
 int test2darray(void);
 
@@ -24,7 +25,7 @@ int main(void)
 			testbst();
 			break;
 		case '2':
-			printf("not ready\n");
+			testavl();
 			break;
 		case '3':
 			printf("not ready\n");
