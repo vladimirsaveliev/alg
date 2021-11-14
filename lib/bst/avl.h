@@ -12,13 +12,13 @@ struct avl_node {
 	int key;
 	struct avl_node *left;
 	struct avl_node *right;
-    enum disbalance_coefficient disbalance;
+	enum disbalance_coefficient disbalance;
 };
 
 
 int avl_insert(struct avl_node **root, int key);
 int avl_delete(struct avl_node **root, int key);
-struct avl_node *avl_min(const struct avl_node *root);
+const struct avl_node *avl_min(const struct avl_node *root);
 
 #define AVL_INSERT_OK 0
 #define AVL_INSERT_EXIST 1
@@ -27,13 +27,14 @@ struct avl_node *avl_min(const struct avl_node *root);
 #define AVL_DELETE_OK 0
 #define AVL_DELETE_NOTFOUND 1
 
+void avl_show_tree(struct avl_node *root);
+void avl_destroy(struct avl_node *root);
+
 #if 0
 struct bst_node *bst_find(struct bst_node *root, int key);
-void bst_destroy(struct bst_node *root);
 void bst_show(struct bst_node *root);
 int bst_depth(struct bst_node *root, int depth);
 void bst_show_line(struct bst_node *root);
-void bst_show_tree(struct bst_node *root);
 
 struct bst_node *bst_predecessor(struct bst_node *root, int key, struct bst_node *pred);
 #endif

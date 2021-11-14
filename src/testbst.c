@@ -31,7 +31,7 @@ int testbst(void)
 		printf("   \x1b[37;1m1 - insert element\x1b[0m\n");
 		printf("   2 - delete element\n");
 		printf("   3 - print BST\n");
-        printf("   4 - built tree by array\n");
+		printf("   4 - built tree by array\n");
 		printf("   0 - return to main menu\n");
 
 		scanf(" %c", &c);
@@ -41,10 +41,10 @@ int testbst(void)
 			scanf(" %d", &key);
 			bst_insert(&root, key);
 
-            printf("\x1B[36;1m");
+			printf("\x1B[36;1m");
 			bst_show_tree(root);
 			printf("\x1b[0m");
-            break;
+			break;
 		case '2':
 			printf("      key to delete: ");
 			scanf(" %d", &key);
@@ -61,38 +61,38 @@ int testbst(void)
 			printf("\x1b[0m");
 			break;
 
-        case '4': {
+		case '4': {
 			int nr;
 			int *arr;
 			int i;
 
 			printf("      number of keys: ");
 			scanf(" %d", &nr);
-            arr = malloc(sizeof(int) * nr);
-            if (arr == NULL) {
-                perror("malloc failed");
-                break;
-            }
-            for (i = 0; i < nr; i++) {
-                scanf(" %d", &arr[i]);
-            }
-            build_pb_bst(&root, arr, nr);
-            free(arr);
+			arr = malloc(sizeof(int) * nr);
+			if (arr == NULL) {
+				perror("malloc failed");
+				break;
+			}
+			for (i = 0; i < nr; i++) {
+				scanf(" %d", &arr[i]);
+			}
+			build_pb_bst(&root, arr, nr);
+			free(arr);
 
-            printf("\x1B[36;1m");
+			printf("\x1B[36;1m");
 			bst_show_tree(root);
 			printf("\x1b[0m");
-            break;
-        }
+			break;
+		}
 		case '0':
 			bst_destroy(root);
 			return 0;
 		}
 	}
 #if 0
-/*	int data[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};*/
+	/*	int data[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};*/
 	int data[7] = {1, 2, 3, 4, 5, 6, 7};
-/*	int data[5] = {2, 1, 3, 9, 7};*/
+	/*	int data[5] = {2, 1, 3, 9, 7};*/
 	int i;
 
 	printf(PACKAGE_STRING"\n");
@@ -100,17 +100,17 @@ int testbst(void)
 
 	root = NULL;
 
-/*	build_pb_bst(&root, data, sizeof(data)/sizeof(data[0]));*/
+	/*	build_pb_bst(&root, data, sizeof(data)/sizeof(data[0]));*/
 
 	for (i = 0; i < sizeof(data)/sizeof(data[0]); i++) {
 		bst_insert(&root, data[i]);
 	}
 
-/*
-	bst_insert(&root, -1);
-	bst_insert(&root, -3);
-	bst_insert(&root, -2);
-*/
+	/*
+	  bst_insert(&root, -1);
+	  bst_insert(&root, -3);
+	  bst_insert(&root, -2);
+	*/
 	bst_show_tree(root);
 
 
