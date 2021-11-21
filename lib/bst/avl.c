@@ -66,6 +66,7 @@ void left_rotate(struct avl_node *x)
 	y->disbalance = same_depth;
 }
 
+
 /*
  * insert key into tree
  */
@@ -74,6 +75,7 @@ int avl_insert(struct avl_node **root, int key)
 	int rc;
 	struct avl_node *x;
 	struct avl_node *y;
+	struct avl_node *z;
     
 	if (*root == NULL) {
 		*root = malloc(sizeof(struct avl_node));
@@ -90,6 +92,7 @@ int avl_insert(struct avl_node **root, int key)
 		return AVL_INSERT_EXIST;
 
 	if ((*root)->key > key) {
+		/* left child */
 		rc = avl_insert(&((*root)->left), key);
 		if (rc != AVL_CONTINUE_PROPAGATION)
 			return AVL_INSERT_OK;
@@ -116,12 +119,40 @@ int avl_insert(struct avl_node **root, int key)
 			y = (*root)->left;
 			switch (y-> disbalance) {
 			case left_greater: /* 3a */
-				right_rotate(x);
+				/* R
+				 */
+				x->left = y->right;
+				y->right = x;
+				(*root) = y;
+				x->disbalance = y->disbalance = same_depth;
 				break;
 		    
 			case right_greater: /* 3b */
-				left_rotate(y);
-				right_rotate(x);
+				z = y->right;
+				/* L
+				 */
+				y->right = z->left;
+				z->left = y;
+				x->left = z;
+
+				/* R
+				 */
+				x->left = z->right;
+				z->right = x;
+
+				if (z->disbalance == left_greater) {
+					y->disbalance = same_depth;
+					x->disbalance = right_greater;
+				} else if (z->disbalance == right_greater) {
+					y->disbalance = left_greater;
+					x->disbalance = same_depth;
+				} else {
+					y->disbalance = same_depth;
+					x->disbalance = same_depth;
+				}
+				
+				z->disbalance = same_depth;
+				(*root) = z;
 				break;
                         
 			case same_depth: /* 3c */
@@ -160,12 +191,40 @@ int avl_insert(struct avl_node **root, int key)
 			y = (*root)->right;
 			switch (y-> disbalance) {
 			case right_greater: /* 3a */
-				left_rotate(x);
+				/* L
+				 */
+				x->right = y->left;
+				y->left = x;
+				(*root) = y;
+				x->disbalance = y->disbalance = same_depth;
 				break;
                         
 			case left_greater: /* 3b */
-				right_rotate(y);
-				left_rotate(x);
+				z = y->left;
+				/* R
+				 */
+				y->left = z->right;
+				z->right = y;
+				x->right = z;
+
+				/* L
+				 */
+				x->right = z->left;
+				z->left = x;
+
+				if (z->disbalance == right_greater) {
+					y->disbalance = same_depth;
+					x->disbalance = left_greater;
+				} else if (z->disbalance == left_greater) {
+					y->disbalance = right_greater;
+					x->disbalance = same_depth;
+				} else {
+					y->disbalance = same_depth;
+					x->disbalance = same_depth;
+				}
+				
+				z->disbalance = same_depth;
+				(*root) = z;
 				break;
                         
 			case same_depth: /* 3c */
@@ -190,6 +249,24 @@ const struct avl_node *avl_min(const struct avl_node *v)
     return avl_min(v->left);
 }
 
+#if 0
+/*
+ * AG1, lecture 6, p. 36
+ */
+static left_delete_rebalance(struct avl_node *x, enum disbalance_coefficient was) {
+	if (x->disbalance == left_greater) {
+		/* case 1 */
+		x->disbalance = same_depth;
+		return AVL_CONTINUE_PROPAGATION;
+	}
+	if (x->disbalance == same_depth) {
+		/* case 2 */
+		x->disbalance = right_greater;
+		return AVL_STOP_PROPAGATION;
+	}
+}
+#endif
+
 /*
  * AG1, lecture 6, p. 35
  */
@@ -205,7 +282,9 @@ int avl_delete(struct avl_node **root, int key)
 		/* empty root */
 		return AVL_DELETE_NOTFOUND;
 	}
+	
 	if (key < (*root)->key) {
+		/* left child */
 		rc = avl_delete(&((*root)->left), key);
 		if (rc != AVL_CONTINUE_PROPAGATION)
 			return AVL_DELETE_OK;
@@ -230,22 +309,63 @@ int avl_delete(struct avl_node **root, int key)
 			y = (*root)->right;
 			switch (y->disbalance) {
 			case right_greater: /* 3a */
-				
-				left_rotate(x);
+				/* left rotate */
+				x->right = y->left;
+				y->left = x;
+				x->disbalance = same_depth;
+				y->disbalance = same_depth;
+				(*root) = y;
 				rc = AVL_CONTINUE_PROPAGATION;
 				break;
+
 			case same_depth: /* 3b */
-				left_rotate(x);
+				/* left rotate */
+				x->right = y->left;
+				y->left = x;
 				x->disbalance = right_greater;
 				y->disbalance = left_greater;
+				(*root) = y;
 				rc = AVL_STOP_PROPAGATION;
 				break;
-				
+
 			case left_greater: /* 3c */
 				z = y->left;
-				right_rotate(z);
-				left_rotate(z);
+				/* R
+				 *      x                   x
+				 *    /   \               /   \
+				 *  A       y           A       z
+				 *        /   \               /   \
+				 *      z       D           B       y
+				 *    /   \                       /   \
+				 *  B       C                   C       D
+				 */
+				x->right = z;
+				y->left = z->right;
+				z->right = y;
 				
+				/* L
+				 *      x                      z
+				 *    /   \                  /   \
+				 *  A       z              x       y
+				 *        /   \          /   \   /   \
+				 *      B       y      A      B C     D
+				 *            /   \
+				 *          C       D
+				 */
+				x->right = z->left;
+				z->left = x;				
+				if (z->disbalance == right_greater) {
+					x->disbalance = same_depth;
+					y->disbalance = left_greater;
+				} else if (z->disbalance == left_greater) {
+					x->disbalance = right_greater;
+					y->disbalance = same_depth;
+				} else {
+					x->disbalance = y->disbalance = z->disbalance = same_depth;
+				}
+				
+				z->disbalance = same_depth;
+				(*root) = z;				
 				rc = AVL_CONTINUE_PROPAGATION;
 				break;
 			}
@@ -257,6 +377,7 @@ int avl_delete(struct avl_node **root, int key)
 	}
 	
 	if (key > (*root)->key) {
+		/* right child */
 		rc = avl_delete(&((*root)->right), key);
 		if (rc != AVL_CONTINUE_PROPAGATION)
 			return AVL_DELETE_OK;
@@ -282,17 +403,48 @@ int avl_delete(struct avl_node **root, int key)
 			y = (*root)->left;
 			switch (y->disbalance) {
 			case left_greater: /* 3a */
-				right_rotate(x);
+				/* right rotate */
+				x->left = y->right;
+				y->right = x;
+				x->disbalance = same_depth;
+				y->disbalance = same_depth;
+				(*root) = y;
 				rc = AVL_STOP_PROPAGATION;
 				break;
+				
 			case same_depth: /* 3b */
-				right_rotate(x);
+				/* right rotate */
+				x->left = y->right;
+				y->right = x;
+				x->disbalance = left_greater;
+				y->disbalance = right_greater;
+				(*root) = y;
 				rc = AVL_STOP_PROPAGATION;
 				break;
 				
 			case right_greater: /* 3c */
-				left_rotate(y);
-				right_rotate(x);
+				z = y->right;
+				/* L
+				 */
+				x->left = z;
+				y->right = z->left;
+				z->left = y;
+
+				/* R
+				 */
+				x->left = z->right;
+				z->right = x;
+				if (z->disbalance == left_greater) {
+					x->disbalance = same_depth;
+					y->disbalance = right_greater;
+				} else if (z->disbalance == right_greater) {
+					x->disbalance = left_greater;
+					y->disbalance = same_depth;
+				} else {
+					x->disbalance = y->disbalance = z->disbalance = same_depth;
+				}
+				z->disbalance = same_depth;
+				(*root) = z;				
 				rc = AVL_CONTINUE_PROPAGATION;
 				break;
 			}
@@ -322,7 +474,7 @@ int avl_delete(struct avl_node **root, int key)
 	/* two children */
 	s = avl_min((*root)->right);
 	(*root)->key = s->key;
-	(*root)->disbalance = s->disbalance;
+//	(*root)->disbalance = s->disbalance;
 	rc = avl_delete(&((*root)->right), s->key);
 	if (rc != AVL_CONTINUE_PROPAGATION)
 		return AVL_DELETE_OK;
@@ -338,7 +490,7 @@ void avl_destroy(struct avl_node *root)
 	free(root);
 }
 
-int avl_depth(struct avl_node *root, int depth)
+static int avl_depth(struct avl_node *root, int depth)
 {
 	int ld;
 	int rd;
@@ -376,25 +528,6 @@ static void avl_fill_level(struct avl_node *root, struct avl_node **arr,
 	avl_fill_level(root->left, arr, level, cur_level, idx);
 	avl_fill_level(root->right, arr, level, cur_level, idx);	
 }
-
-#if 0
-void avl_show_line(struct avl_node *root)
-{
-	char *d;
-	if (root == NULL)
-		return;
-	avl_show_line(root->left);
-	if (root->disbalance == same_depth)
-		d = "same";
-	else if (root->disbalance == right_greater)
-		d = "right";
-	else
-		d = "left";
-
-	printf("%4d (%s)", root->key, d);
-	avl_show_line(root->right);
-}
-#endif
 
 static struct avl_node** array2_init(int size)
 {
