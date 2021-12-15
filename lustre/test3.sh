@@ -8,6 +8,7 @@
 # lfs setstripe -E 1M -L mdt -E -1 -c 1 -p mypool /mnt/lustre/dir1
 #
 #
+XATTR="/home/vs/alg/lustre/xattr"
 
 create_pool()
 {
@@ -38,20 +39,20 @@ create_pool
 
 echo create dir
 mkdir /mnt/lustre/dir1
-/home/vs/soft/xattr /mnt/lustre/dir1
+$XATTR /mnt/lustre/dir1
 mkdir /mnt/lustre/dir2
 
 echo add pool
 lfs setstripe -p mypool /mnt/lustre/dir1
-/home/vs/soft/xattr /mnt/lustre/dir1
+$XATTR /mnt/lustre/dir1
 
 echo add PFL
 lfs setstripe -E 1M -L mdt -E -1 -c 1 /mnt/lustre/dir1
-/home/vs/soft/xattr /mnt/lustre/dir1
+$XATTR /mnt/lustre/dir1
 
 echo add PFL with pool
 lfs setstripe -E 1M -L mdt -E -1 -c 1 -p mypool /mnt/lustre/dir2
-/home/vs/soft/xattr /mnt/lustre/dir2
+$XATTR /mnt/lustre/dir2
 
 destroy_pool
 
