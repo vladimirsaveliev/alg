@@ -13,6 +13,33 @@
 #define LOV_PATTERN_RAID1               0x002
 #define LOV_PATTERN_MDT                 0x100
 
+
+struct lustre_mdt_attrs {
+        /**
+         * Bitfield for supported data in this structure. From enum lma_compat.
+         * lma_self_fid and lma_flags are always available.
+         */
+        __u32   lma_compat;
+        /**
+         * Per-file incompat feature list. Lustre version should support all
+         * flags set in this field. The supported feature mask is available in
+         * LMA_INCOMPAT_SUPP.
+         */
+        __u32   lma_incompat;
+        /** FID of this inode */
+        struct lu_fid  lma_self_fid;
+};
+
+static void print_lma(const char *str, void *p)
+{
+	struct lustre_mdt_attrs *lma = (struct lustre_mdt_attrs *)p;
+
+	printf("%scompat: %x\n", str, lma->lma_compat);
+	printf("%sincompat: %x\n", str, lma->lma_incompat);
+	printf("%sself_fid[seq:oid:ver]: [%llx:%x:%x]\n", str, lma->lma_self_fid.f_seq,
+	       lma->lma_self_fid.f_oid, lma->lma_self_fid.f_ver);
+}
+
 static const char *pattern_name(__u32 pattern)
 {
 	if (pattern == LOV_PATTERN_RAID0)
@@ -143,6 +170,10 @@ static void xattr_value(const char *name, const char *key)
 			printf("\tlmm_magic %x\n", lmm->lmm_magic);
 			break;
 		}
+	} else if (!strcmp(key, "trusted.lma")) {
+		print_lma("\t", val);
+	} else {
+		printf("\tnot ready\n");
 	}
 	free(val);
 }

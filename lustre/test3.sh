@@ -40,18 +40,23 @@ create_pool
 echo create dir
 mkdir /mnt/lustre/dir1
 $XATTR /mnt/lustre/dir1
+
 mkdir /mnt/lustre/dir2
+$XATTR /mnt/lustre/dir2
 
 echo add pool
 lfs setstripe -p mypool /mnt/lustre/dir1
 $XATTR /mnt/lustre/dir1
 
 echo add PFL
+lctl dk > /dev/null
 lfs setstripe -E 1M -L mdt -E -1 -c 1 /mnt/lustre/dir1
+lctl dk > add.pfl.without.pool
 $XATTR /mnt/lustre/dir1
 
 echo add PFL with pool
 lfs setstripe -E 1M -L mdt -E -1 -c 1 -p mypool /mnt/lustre/dir2
+lctl dk > add.pfl.with.pool
 $XATTR /mnt/lustre/dir2
 
 destroy_pool
