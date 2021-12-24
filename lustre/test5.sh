@@ -50,7 +50,7 @@ lfs setstripe -E 1M -L mdt -E -1 -c 2 /mnt/lustre/dir
 warn "after setstripe PFL with mdt"
 /home/vs/alg/lustre/xattr /mnt/lustre/dir
 
-lfs setstripe -E 1M -c 1 -i 0 -E -E -1 -c 2 /mnt/lustre/dir
+lfs setstripe -E 1M -c 1 -i 0 -E -1 -c 2 /mnt/lustre/dir
 warn "after setstripe PFL without mdt"
 /home/vs/alg/lustre/xattr /mnt/lustre/dir
 
