@@ -12,6 +12,7 @@ struct bst_node {
 int bst_insert(struct bst_node **root, int key);
 int bst_delete(struct bst_node **root, int key);
 struct bst_node *bst_min(struct bst_node *root);
+struct bst_node *bst_max(struct bst_node *root);
 
 #define BST_INSERT_OK 0
 #define BST_INSERT_EXIST 1

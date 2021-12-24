@@ -6,6 +6,7 @@ int testbst(void);
 int testavl(void);
 int testgcd(void);
 int test2darray(void);
+int testsortable_array(void);
 
 int main(void)
 {
@@ -18,6 +19,7 @@ int main(void)
 		printf("2 - test AVL tree\n");
 		printf("3 - greatest common divisor\n");
 		printf("4 - array\n");
+		printf("5 - sortable array\n");
 		printf("0 - quit\n");
 		scanf(" %c", &c);
 		switch (c) {
@@ -37,6 +39,9 @@ int main(void)
 			break;
 /*			test2darray();
 			break;*/
+		case '5':
+			testsortable_array();
+			break;
 		case '0':
 			exit(0);
 		}

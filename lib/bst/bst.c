@@ -126,6 +126,14 @@ struct bst_node *bst_min(struct bst_node *v)
     return bst_min(v->left);
 }
 
+struct bst_node *bst_max(struct bst_node *v)
+{
+	if(v->right == NULL) {
+		return v;
+	}
+	return bst_max(v->right);
+}
+
 /*
  * AG1, lecture 6, p. 14
  */
