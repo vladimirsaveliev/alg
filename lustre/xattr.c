@@ -59,6 +59,7 @@ static void print_lum_v1(const char *str, void *p)
 	printf("%spattern %s\n", str, pattern_name(lum->lmm_pattern));
 	printf("%sstripe_size %d\n", str, lum->lmm_stripe_size);
 	printf("%sstripe_count %d\n", str, lum->lmm_stripe_count);
+	printf("%sstripe_offset/layout_gen %d\n", str, lum->lmm_stripe_offset);
 }
 
 static void print_lum_v3(const char *str, void *p)
@@ -69,7 +70,8 @@ static void print_lum_v3(const char *str, void *p)
 	printf("%spattern %s\n", str, pattern_name(lum->lmm_pattern));
 	printf("%sstripe_size %d\n", str, lum->lmm_stripe_size);
 	printf("%sstripe_count %d\n", str, lum->lmm_stripe_count);
-	printf("%spool_name %s\n", str, lum->lmm_pool_name);
+	printf("%sstripe_offset %d\n", str, lum->lmm_stripe_offset);
+	printf("%spool_name/layout_gen %s\n", str, lum->lmm_pool_name);
 }
 
 static void print_lum_comp(const char *str, void *p)
