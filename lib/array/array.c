@@ -54,10 +54,12 @@ void array_print(struct int_array *arr, int width)
 	int i;
 
 	for (i = 0; i < arr->cur_size; i++) {
-		if (width == 0)
+		if (width == 0) {
 			printf("%4d", arr->array[i]);
-		else
+		} else {
+			/* this is for bst_show_tree() */
 			print_center_aligned(arr->array[i], width);
+		}
 	}
 	printf("\n");
 }
