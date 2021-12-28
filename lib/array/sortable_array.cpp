@@ -1,9 +1,13 @@
+#include "SortedArray.h"
 #include <iostream>
 #include <assert.h>
-#include <math.h>
-#include <stdlib.h>
 
 using namespace std;
+
+struct arrayx {
+	int* arr;
+	int size;
+};
 
  int range_rand(int min, int max) {
 	int rc = 0;
@@ -13,6 +17,52 @@ using namespace std;
 
 	return rc;
 }
+
+struct arrayx _quick_sort(struct arrayx *x) {
+	if (x->size <= 1) {
+		return *x;
+	}
+	int pivot = x->arr[x->size / 2];
+	struct arrayx l;
+	l.size = 0;
+	l.arr = new int[x->size];
+	struct arrayx m;
+	m.size = 0;
+	m.arr = new int[x->size];
+	struct arrayx r;
+	r.size = 0;
+	r.arr = new int[x->size];
+	for (int i = 0; i < x->size; i++) {
+		if (x->arr[i] < pivot) {
+			l.arr[l.size++] = x->arr[i];
+			continue;
+		}
+		if (x->arr[i] > pivot) {
+			r.arr[r.size++] = x->arr[i];
+			continue;
+		}
+		m.arr[m.size++] = x->arr[i];
+	}
+	l = _quick_sort(&l);
+	r = _quick_sort(&r);
+	int ind = 0;
+	for (int i = 0; i < l.size; i++) {
+		x->arr[ind++] = l.arr[i];
+	}
+	for (int i = 0; i < m.size; i++) {
+		x->arr[ind++] = m.arr[i];
+	}
+	for (int i = 0; i < r.size; i++) {
+		x->arr[ind++] = r.arr[i];
+	}
+
+	delete[] l.arr;
+	delete[] m.arr;
+	delete[] r.arr;
+
+	return *x;
+}
+
 
 class sorted_array
 {
@@ -147,6 +197,13 @@ public:
 		}
 	}
 
+	void quick_sort() {
+		struct arrayx x;
+		x.arr = this->arr;
+		x.size = this->size;
+		_quick_sort(&x);
+	}
+
 	void print_array() {
 		for (int i = 0; i < size; i++) {
 			cout << arr[i] << " ";
@@ -159,7 +216,7 @@ int main() {
 	sorted_array new_arr = sorted_array(10);
 	new_arr.randomizer(0, pow(10, 3) - 1);
 	new_arr.print_array();
-	new_arr.radix_sort();
+	new_arr.quick_sort();
 	new_arr.print_array();
 
 	return 0;
