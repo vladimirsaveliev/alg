@@ -1,9 +1,9 @@
-#include <config.h>
+// #include <config.h>
 #include <stdio.h>
 #include <malloc.h>
 #include <stdlib.h>
 
-#include "lib/bst/avl.h"
+#include "../lib/bst/avl.h"
 
 #if 0
 void build_pb_bst(struct bst_node **root,  int *keys, int nr_keys)

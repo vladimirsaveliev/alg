@@ -1,7 +1,7 @@
-#include <config.h>
+// #include <config.h>
 #include <stdio.h>
 #include <malloc.h>
-#include "lib/bst/bst.h"
+#include "..\lib\bst\bst.h"
 
 /*
 Q

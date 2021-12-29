@@ -1,4 +1,4 @@
-#include <config.h>
+// #include <config.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -10,7 +10,7 @@ int testsortable_array(void);
 
 int main(void)
 {
-	printf(PACKAGE_STRING"\n");
+//	printf(PACKAGE_STRING"\n");
 
 	while (1) {
 		char c;

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "lib/array/sortable_array.h"
+#include "../lib/array/sortable_array.h"
 
 using namespace std;
 
