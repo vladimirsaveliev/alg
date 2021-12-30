@@ -7,6 +7,7 @@ int testavl(void);
 int testgcd(void);
 int test2darray(void);
 int testsortable_array(void);
+int testdigraph(void);
 
 int main(void)
 {
@@ -20,6 +21,7 @@ int main(void)
 		printf("3 - greatest common divisor\n");
 		printf("4 - array\n");
 		printf("5 - sortable array\n");
+		printf("6 - graph\n");
 		printf("0 - quit\n");
 		scanf(" %c", &c);
 		switch (c) {
@@ -41,6 +43,9 @@ int main(void)
 			break;*/
 		case '5':
 			testsortable_array();
+			break;
+		case '6':
+			testdigraph();
 			break;
 		case '0':
 			exit(0);
