@@ -18,6 +18,7 @@ void digraph::read_digraph(istream &stream) {
 	string str;
 	int id1;
 	int id2;
+	int weight;
 	while (getline(stream, str)) {
 		stringstream s(str);
 		s >> id1;
@@ -31,8 +32,14 @@ void digraph::read_digraph(istream &stream) {
 			if (end == nullptr) {
 				end = add_vertex(id2);
 			}
-			// Add id2 adjucency list
-			add_arrow_end(begin, id2);
+			if (s >> weight) {
+				// Add id2 adjucency list
+				add_arrow_end(begin, id2, weight);
+			}
+			else {
+				cout << "Format invalid\n";
+				abort();
+			}
 		}
 	}
 }
@@ -67,10 +74,10 @@ struct vertex* digraph::add_vertex(int vertex) {
 	return v;
 }
 
-void digraph::add_arrow_end(struct vertex* v, int vertex_id) {
+void digraph::add_arrow_end(struct vertex* v, int vertex_id, int weight) {
 	struct arrow_end* a = new struct arrow_end;
 	a->adj_vertex_id = vertex_id;
-	a->weight = 0;
+	a->weight = weight;
 	a->h_link = v->h_link;
 	v->h_link = a;
 }
@@ -86,7 +93,7 @@ void digraph::print_digraph() {
 		cout << it->vertex_id << ": ";
 		struct arrow_end* it2 = it->h_link;
 		while (it2) {
-			cout << it2->adj_vertex_id << " ";
+			cout << it2->adj_vertex_id << "(" << it2->weight << ") ";
 			it2 = it2->h_link;
 		}
 		cout << "\n";	

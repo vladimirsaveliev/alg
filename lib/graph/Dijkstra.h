@@ -23,7 +23,7 @@ private:
 
 	struct vertex* add_vertex(int vertex);
 
-	void add_arrow_end(struct vertex* v, int vertex_id);
+	void add_arrow_end(struct vertex* v, int vertex_id, int weight);
 
 	void free_graph();
 
