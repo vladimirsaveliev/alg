@@ -11,6 +11,7 @@ extern "C" {
 			char c;
 
 			printf("   \x1b[37;1m1 - read graph from file\x1b[0m\n");
+			printf("   2  - dijkstra algorithm\n");
 			printf("   0 - return to main menu\n");
 
 			scanf(" %c", &c);
@@ -31,6 +32,15 @@ extern "C" {
 				infile.close();
 			}
 			break;
+			
+			case '2':
+				int start;
+				cout << "Input starting vertex\n";
+				cin >> start;
+				g1.dijkstra(start);
+				g1.print_digraph();	
+				break;
+			
 			case '0':
 				return 0;
 			}
