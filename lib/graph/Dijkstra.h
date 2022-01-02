@@ -50,4 +50,6 @@ public:
 	void dijkstra(int vertex_id);
 
 	void print_digraph();
+
+	void tree_minimal_cover();
 };

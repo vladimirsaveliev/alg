@@ -168,6 +168,55 @@ struct vertex* digraph::select_vertex() {
 	return op_vertex;
 }
 
+int vertex_degree(struct vertex* vertex) {
+	int count = 0;
+	struct arrow_end* it = vertex->h_link;
+	while (it) {
+		count++;
+		it = it->h_link;
+	}
+
+	return count;
+}
+
+// Modified alg from GFG
+int vertex_cover(struct vertex* vertex, bool first) {
+	if (vertex == nullptr) {
+		return 0;
+	}
+	if (vertex_degree(vertex) == 1 && !first) {
+		return 0;
+	}
+	int size_incl = 1;
+	struct arrow_end* it = vertex->h_link;
+	while (it) {
+		size_incl += vertex_cover(it->vertex, false);
+		it = it->h_link;
+	}
+	int size_excl = 0;
+	it = vertex->h_link;
+	while (it) {
+		size_excl++;
+		struct vertex* child = it->vertex;
+		struct arrow_end* it2 = child->h_link;
+		while (it2) {
+			size_excl += vertex_cover(it2->vertex, false);
+			it2 = it2->h_link;
+		}
+		it = it->h_link;
+	}
+
+	return size_incl > size_excl ? size_excl : size_incl;
+}
+
+void digraph::tree_minimal_cover() {
+	struct vertex* it = this->first_vertex;
+	while (it) {
+		cout << "root is " << it->vertex_id << ": cover is " << vertex_cover(it, true) << "\n"; 
+		it = it->v_link;
+	}
+}
+
 void digraph::print_digraph() {
 	struct vertex* it = this->first_vertex;
 	

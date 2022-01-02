@@ -12,6 +12,7 @@ extern "C" {
 
 			printf("   \x1b[37;1m1 - read graph from file\x1b[0m\n");
 			printf("   2  - dijkstra algorithm\n");
+			printf("   3 - minimal cover\n");
 			printf("   0 - return to main menu\n");
 
 			scanf(" %c", &c);
@@ -41,6 +42,10 @@ extern "C" {
 				g1.print_digraph();	
 				break;
 			
+			case '3':
+				g1.tree_minimal_cover();
+				break;
+
 			case '0':
 				return 0;
 			}
