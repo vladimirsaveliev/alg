@@ -206,13 +206,35 @@ int vertex_cover(struct vertex* vertex, bool first) {
 		it = it->h_link;
 	}
 
-	return size_incl > size_excl ? size_excl : size_incl;
+	if (size_incl > size_excl) {
+		vertex->incover = false;
+		return size_excl;
+	}
+	else {
+		vertex->incover = true;
+	}
 }
 
 void digraph::tree_minimal_cover() {
 	struct vertex* it = this->first_vertex;
 	while (it) {
-		cout << "root is " << it->vertex_id << ": cover is " << vertex_cover(it, true) << "\n"; 
+		// Mark all vertices as not in cover
+		struct vertex* it2 = this->first_vertex;
+		while (it2) {
+			it2->incover = false;
+			it2 = it2->v_link;
+		}
+		
+		cout << "root is " << it->vertex_id << ": cover is " << vertex_cover(it, true) << "\n";
+		// Print set of vertices in cover
+		it2 = this->first_vertex;
+		while (it2) {
+			if (it2->incover) {
+				cout << it2->vertex_id << " : ";
+			}
+			it2 = it2->v_link;
+		}
+		cout << "\n";
 		it = it->v_link;
 	}
 }

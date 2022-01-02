@@ -23,6 +23,7 @@ struct vertex {
 	int h; // shortest path length to initial vertex
 	struct vertex* P; // predecessor on the shortest path 
 	state_t state;
+	bool incover;
 };
 
 class digraph {
