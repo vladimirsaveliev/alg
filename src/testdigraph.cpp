@@ -38,6 +38,9 @@ extern "C" {
 				int v;
 				cout << "Input start vertex:\n";
 				cin >> v;
+				cout << "Spanning tree:\n";
+				g1.dfs_spanning_tree(v);
+				cout << "Connected component:\n";
 				g1.dfs_graph(v);
 				break;
 			}

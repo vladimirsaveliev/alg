@@ -3,6 +3,11 @@
 
 using namespace std;
 
+enum dfs_mode {
+	dfs_st_mode,
+	dfs_cn_mode
+};
+
 enum graph_state_t {
 	gs_unmarked,
 	gs_opened,
@@ -23,8 +28,9 @@ private:
 
 	void allocate_table();
 	void deallocate_table();
-	void dfs(int v);
+	void dfs(int v, dfs_mode mode);
 	void print_closed_vertices();
+	void dfs_rec(int v, dfs_mode mode);
 
 public:
 	graph();
@@ -32,6 +38,7 @@ public:
 	void print_graph();
 	void read_graph(istream &stream);
 	void dfs_graph(int v);
+	void dfs_spanning_tree(int v);
 
 };
 

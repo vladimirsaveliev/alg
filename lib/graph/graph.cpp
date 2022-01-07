@@ -4,6 +4,7 @@
 
 using namespace std;
 
+
 graph::graph() {
 	this->table = nullptr;
 	this->n_vertex = 0;
@@ -13,11 +14,15 @@ graph::~graph() {
 	this->deallocate_table();
 }
 
+void print_edge(int i, int j) {
+	cout << "(" << i << ", " << j << ")\n";
+}
+
 void graph::print_graph() {
 	for (int i = 0; i < this->n_vertex; i++) {
 		for (int j = i; j < this->n_vertex; j++) {
 			if (this->table[i][j].connected == true) {
-				cout << "(" << i << ", " << j << ")\n";
+				print_edge(i, j);
 			}
 		}
 	}
@@ -60,8 +65,18 @@ void graph::read_graph(istream &stream) {
 	}
 }
 
-// Lecture 2. Finding of a Connected Component of a Graph
+void graph::dfs_spanning_tree(int v) {
+	this->dfs(v, dfs_st_mode);
+}
+
 void graph::dfs_graph(int v) {
+	this->dfs(v, dfs_cn_mode);
+}
+
+// Lecture 2. Finding of a Connected Component of a Graph
+// if mode = ST
+//		print ST
+void graph::dfs(int v, dfs_mode mode) {
 	if (v >= this->n_vertex) {
 		cout << "Invalid vertex\n";
 		return;
@@ -69,8 +84,10 @@ void graph::dfs_graph(int v) {
 	for (int i = 0; i < this->n_vertex; i++) {
 		this->table[i][i].state = gs_unmarked;
 	}
-	this->dfs(v);
-	this->print_closed_vertices();
+	this->dfs_rec(v, mode);
+	if (mode == dfs_cn_mode) {
+		this->print_closed_vertices();
+	}
 }
 
 void graph::print_closed_vertices() {
@@ -82,14 +99,22 @@ void graph::print_closed_vertices() {
 	cout << "\n";
 }
 
-void graph::dfs(int v) {
+void graph::dfs_rec(int v, dfs_mode mode) {
 	if (this->table[v][v].state != gs_unmarked) {
 		return;
 	}
 	this->table[v][v].state = gs_opened;
 	for (int i = 0; i < this->n_vertex; i++) {
 		if (this->table[v][i].connected == true) {
-			this->dfs(i);
+			if (mode == dfs_cn_mode) {
+				this->dfs_rec(i, mode);
+			}
+			else {
+				if (this->table[i][i].state == gs_unmarked) {
+					print_edge(v, i);
+					this->dfs_rec(i, mode);
+				}
+			}
 		}
 	}
 	this->table[v][v].state = gs_closed;
