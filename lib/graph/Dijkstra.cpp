@@ -99,7 +99,7 @@ void digraph::dijkstra(int vertex_id) {
 	while (it) {
 		it->h = INT_MAX;
 		it->P = nullptr; // Undefined predecessor
-		it->state = unmarked;
+		it->state = ds_unmarked;
 		it = it->v_link;
 	}
 	/*
@@ -111,7 +111,7 @@ void digraph::dijkstra(int vertex_id) {
 		cout << "Vertex not found\n";
 		return;
 	}
-	v0->state = opened;
+	v0->state = ds_opened;
 	this->nr_open_vertices++;
 	v0->h = 0;
 	// (6) While there is some open vertex do
@@ -132,16 +132,16 @@ void digraph::dijkstra(int vertex_id) {
 			 */
 			if (w->vertex->h > v->h + w->weight) {
 				w->vertex->h = v->h + w->weight;
-				if (w->vertex->state != opened) {
+				if (w->vertex->state != ds_opened) {
 					this->nr_open_vertices++;
-					w->vertex->state = opened;
+					w->vertex->state = ds_opened;
 				}
 				w->vertex->P = v;
 			}
 			
 			w = w->h_link;
 		}
-		v->state = closed;
+		v->state = ds_closed;
 		this->nr_open_vertices--;
 	}
 }
@@ -151,7 +151,7 @@ struct vertex* digraph::select_vertex() {
 	struct vertex* it = this->first_vertex;
 	struct vertex* op_vertex = nullptr;
 	while (it) {
-		if (it->state == opened) {
+		if (it->state == ds_opened) {
 			if (op_vertex == nullptr) {
 				op_vertex = it;
 			}

@@ -12,6 +12,7 @@ extern "C" {
 			char c;
 
 			printf("   \x1b[37;1m1 - read graph from file\x1b[0m\n");
+			printf("   2 - dfs algorithm\n");
 			printf("   0 - return to main menu\n");
 
 			scanf(" %c", &c);
@@ -30,6 +31,14 @@ extern "C" {
 				g1.read_graph(infile);
 				g1.print_graph();
 				infile.close();
+				break;
+			}
+			case '2':
+			{
+				int v;
+				cout << "Input start vertex:\n";
+				cin >> v;
+				g1.dfs_graph(v);
 				break;
 			}
 			case '0': 

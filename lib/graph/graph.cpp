@@ -1,5 +1,6 @@
-#include "graph.h"
+#include <iomanip>
 #include <iostream>
+#include "graph.h"
 
 using namespace std;
 
@@ -58,3 +59,40 @@ void graph::read_graph(istream &stream) {
 		this->table[id2][id1].connected = true;
 	}
 }
+
+// Lecture 2. Finding of a Connected Component of a Graph
+void graph::dfs_graph(int v) {
+	if (v >= this->n_vertex) {
+		cout << "Invalid vertex\n";
+		return;
+	}
+	for (int i = 0; i < this->n_vertex; i++) {
+		this->table[i][i].state = gs_unmarked;
+	}
+	this->dfs(v);
+	this->print_closed_vertices();
+}
+
+void graph::print_closed_vertices() {
+	for (int i = 0; i < this->n_vertex; i++) {
+		if (this->table[i][i].state == gs_closed) {
+			cout << setw(5) << i;
+		}
+	}
+	cout << "\n";
+}
+
+void graph::dfs(int v) {
+	if (this->table[v][v].state != gs_unmarked) {
+		return;
+	}
+	this->table[v][v].state = gs_opened;
+	for (int i = 0; i < this->n_vertex; i++) {
+		if (this->table[v][i].connected == true) {
+			this->dfs(i);
+		}
+	}
+	this->table[v][v].state = gs_closed;
+}
+
+

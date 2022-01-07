@@ -9,11 +9,11 @@ struct arrow_end {
 	struct vertex* vertex;
 };
 
-enum state_t
+enum digraph_state_t
 {
-	unmarked,
-	opened,
-	closed
+	ds_unmarked,
+	ds_opened,
+	ds_closed
 };
 
 struct vertex {
@@ -22,7 +22,7 @@ struct vertex {
 	struct vertex* v_link;
 	int h; // shortest path length to initial vertex
 	struct vertex* P; // predecessor on the shortest path 
-	state_t state;
+	digraph_state_t state;
 	bool incover;
 };
 
