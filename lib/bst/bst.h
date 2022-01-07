@@ -27,4 +27,5 @@ void bst_show_line(struct bst_node *root);
 void bst_show_tree(struct bst_node *root);
 
 struct bst_node *bst_predecessor(struct bst_node *root, int key, struct bst_node *pred);
-
+struct bst_node *bst_predecessor2(struct bst_node *root, int key);
+void bst_split(struct bst_node *root, int key);

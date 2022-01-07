@@ -117,6 +117,119 @@ struct bst_node *bst_predecessor(struct bst_node *root, int key, struct bst_node
 	}
 }
 
+// Algorithm with no recursion
+// Return value:
+//         pointer to element of tree
+struct bst_node* bst_predecessor2(struct bst_node* root, int key)
+{
+	struct bst_node *pred = NULL;  // pointer to predecessor
+
+	while (root->key != key) {
+		if (root->key > key) {
+			if (root->left == NULL) {
+				return NULL; // key is not found
+			}
+			root = root->left;
+			continue;
+		} else {
+			// key > root->key
+			if (root->right == NULL) {
+				return NULL;
+			}
+			pred = root;
+			root = root->right;
+		}
+		
+	}
+	// Key is found here
+	if (root->left == NULL) {
+//		return pred;
+	} else {
+		root = root->left;
+		while (root->right != NULL) {
+			root = root->right;
+		}
+		pred = root;
+	}
+
+	
+	return pred;
+}
+
+/*
+struct bst_node* BST_successor(struct bst_node *root, int key)
+{
+	struct bst_node* success = NULL;
+	if (root->right != NULL) {
+		root = root->right;
+		while(root->left != NULL) {
+			success = root->left;
+		}
+		return success;
+	}
+	
+
+}
+*/
+
+
+void bst_split(struct bst_node *root, int key)
+{
+	struct bst_node *parent = NULL;
+	struct bst_node *child = root;
+	
+	while (child->key != key) {
+		parent = child;
+		if (child->key > key) {
+			if (child->left == NULL) {
+				printf("%d not found\n", key);
+				return;
+			}
+			child = child->left;
+		}
+		else {
+			if (child->right == NULL) {
+				printf("%d not found\n", key);
+			        return;
+			}
+			child = child->right;
+		}
+	}
+	// key is found
+	if (parent == NULL) {
+		struct bst_node *T1 = child->left;
+		struct bst_node *T2 = child;
+		child->left = NULL;
+		printf("T1:\n");
+		bst_show_tree(T1);
+		printf("T2:\n");
+		bst_show_tree(T2);
+		return;
+	}
+	if (parent->left == child) {
+		struct bst_node *T1 = child->left;
+		struct bst_node *T2 = root;
+		child->left = NULL;
+		printf("T1:\n");
+		bst_show_tree(T1);
+		printf("T2:\n");
+		bst_show_tree(T2);
+		return;
+	}
+	if (parent->right == child) {
+		struct bst_node *T1 = root;
+		parent->right = child->left;
+		struct bst_node *T2 = child;
+		child->left = NULL;
+		printf("T1:\n");
+		bst_show_tree(T1);
+		printf("T2:\n");
+		bst_show_tree(T2);
+		return;
+	}
+	printf("Unknown case\n");
+}
+
 /* AG1, lecture 6, p. 9 */
 struct bst_node *bst_min(struct bst_node *v)
 {

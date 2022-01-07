@@ -45,7 +45,7 @@ int main(void)
 			testsortable_array();
 			break;
 		case '6':
-			testdigraph();
+			//	testdigraph();
 			break;
 		case '0':
 			exit(0);

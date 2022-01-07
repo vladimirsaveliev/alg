@@ -1,7 +1,7 @@
 // #include <config.h>
 #include <stdio.h>
 #include <malloc.h>
-#include "..\lib\bst\bst.h"
+#include "../lib/bst/bst.h"
 
 /*
 Q
@@ -68,6 +68,8 @@ int testbst(void)
 		printf("   3 - print BST\n");
 		printf("   4 - built tree by array\n");
 		printf("   5/6 - min/max\n");
+		printf("   7 - search predecessor\n");
+		printf("   8 - bst_split\n");
 		printf("   0 - return to main menu\n");
 
 		scanf(" %c", &c);
@@ -128,6 +130,21 @@ int testbst(void)
 			tmp = bst_max(root);
 			printf("max key: %d\n", tmp->key);
 			break;
+		case '7':
+			printf("      key for predecessor: ");
+			scanf(" %d", &key);
+			tmp = bst_predecessor2(root, key);
+			if (tmp == NULL) {
+				printf("Key %d has no predecessor.\n", key);
+			} else {
+				printf("predecessor of key %d is: %d\n", key, tmp->key);
+			}
+			break;
+		case '8':
+			printf("Key for split\n");
+			scanf(" %d", &key);
+			bst_split(root, key);
+			break;	
 		case '0':
 			bst_destroy(root);
 			return 0;
