@@ -17,6 +17,7 @@ enum graph_state_t {
 struct edge_info
 {
 	bool connected;
+	bool in_graph;
 	int weight;
 	graph_state_t state;
 };
@@ -33,6 +34,7 @@ private:
 	void dfs(int v, dfs_mode mode);
 	void print_closed_vertices();
 	void dfs_rec(int v, dfs_mode mode);
+	bool spanning_tree_edge(graph& mst);
 
 public:
 	graph();
@@ -43,5 +45,6 @@ public:
 	void dfs_graph(int v);
 	void dfs_spanning_tree(int v);
 	bool is_weighted();
+	void jarnik(graph& mst);
 };
 

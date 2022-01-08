@@ -8,12 +8,14 @@ using namespace std;
 extern "C" {
 	int testgraph() {
 		graph g1;
+		graph g2;
 		while (1) {
 			char c;
 
 			printf("   \x1b[37;1m1 - read graph from file\x1b[0m\n");
 			printf("   2 - dfs algorithm\n");
 			printf("   3 - read weighted graph\n");
+			printf("   4 - Jarnik algorithm(find min spannning tree)\n");
 			printf("   0 - return to main menu\n");
 
 			scanf(" %c", &c);
@@ -61,6 +63,14 @@ extern "C" {
 				infile.close();
 				break;
 			}
+			case '4':
+				if (!g1.is_weighted()) {
+					cout << "Jarnik algorithm works only with weighted graph\n";
+					break;
+				}
+				g1.jarnik(g2);
+				g2.print_graph();
+				break;
 			case '0': 
 				return 0;
 			}

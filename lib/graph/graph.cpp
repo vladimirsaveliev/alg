@@ -41,6 +41,7 @@ void graph::allocate_table() {
 	this->table = new struct edge_info*[this->n_vertex];
 	for (int i = 0; i < this->n_vertex; i++) {
 		this->table[i] = new struct edge_info[this->n_vertex];
+		this->table[i][i].in_graph = true;
 		for (int j = 0; j < this->n_vertex; j++) {
 			this->table[i][j].connected = false;
 		}
@@ -128,6 +129,57 @@ void graph::dfs(int v, dfs_mode mode) {
 	if (mode == dfs_cn_mode) {
 		this->print_closed_vertices();
 	}
+}
+
+// Return value
+//		true if edge has been inserted
+//		false otherwise
+bool graph::spanning_tree_edge(graph &mst) {
+	int  cur_min_weight = INT_MAX;
+	int u = -1;
+	int v;
+	for (int i = 0; i < mst.n_vertex; i++) {
+		if (mst.table[i][i].in_graph) {
+			for (int j = 0; j < this->n_vertex; j++) {
+				if (this->table[i][j].connected && !mst.table[j][j].in_graph) {
+					if (this->table[i][j].weight < cur_min_weight) {
+						cur_min_weight = this->table[i][j].weight;
+						u = i;
+						v = j;
+					}
+				}
+			}
+		}
+	}
+	if (u == -1) {
+		return false;
+	}
+
+	// (4) Attach to T the edge of this type with smallest weight and
+	// the corresponding vertex v
+	mst.table[u][v] = this->table[u][v];
+	mst.table[v][u] = this->table[v][u];
+	mst.table[v][v].in_graph = true;
+	
+	return true;
+}
+
+// Jarnik alg from AG1 Lecture 11
+// Input:
+//		undirected weighted graph
+// Output:
+//		MST(minimal spanning tree)		
+ void graph::jarnik(graph &mst) {
+	 mst.deallocate_table();
+	 mst.n_vertex = this->n_vertex;
+	 mst.allocate_table();
+	 for (int i = 0; i < mst.n_vertex; i++) {
+		 mst.table[i][i].in_graph = false;
+	 }
+	 // (1) v0 := any vertex of G
+	 mst.table[0][0].in_graph = true;
+	 while (this->spanning_tree_edge(mst))
+		 ;
 }
 
 void graph::print_closed_vertices() {
