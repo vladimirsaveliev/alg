@@ -14,6 +14,10 @@ graph::~graph() {
 	this->deallocate_table();
 }
 
+void print_weighted_edge(int i, int j, int weight) {
+	cout << "(" << i << ", " << j << ", (" << weight << "))\n";
+}
+
 void print_edge(int i, int j) {
 	cout << "(" << i << ", " << j << ")\n";
 }
@@ -22,7 +26,12 @@ void graph::print_graph() {
 	for (int i = 0; i < this->n_vertex; i++) {
 		for (int j = i; j < this->n_vertex; j++) {
 			if (this->table[i][j].connected == true) {
-				print_edge(i, j);
+				if (this->weighted) {
+					print_weighted_edge(i, j, this->table[i][j].weight);
+				}
+				else {
+					print_edge(i, j);
+				}
 			}
 		}
 	}
@@ -46,6 +55,31 @@ void graph::deallocate_table() {
 }
 
 // Input file:
+//		2
+//		0 1 5
+//	2 is number of vertices
+//  0 1 - incident vertices of the edge in graph
+//  5 is weight of this edge
+void graph::read_wgraph(istream &stream) {
+	int id1;
+	int id2;
+	int id3;
+
+	this->deallocate_table();
+	stream >> this->n_vertex;
+	this->allocate_table();
+
+	while (stream >> id1 >> id2 >> id3) {
+		this->table[id1][id2].connected = true;
+		this->table[id2][id1].connected = true;
+		this->table[id1][id2].weight = id3;
+		this->table[id2][id1].weight = id3;
+	}
+
+	this->weighted = true;
+}
+
+// Input file:
 //		2 
 //		0 1
 //	2 is number of vertex
@@ -63,6 +97,12 @@ void graph::read_graph(istream &stream) {
 		this->table[id1][id2].connected = true;
 		this->table[id2][id1].connected = true;
 	}
+
+	this->weighted = false;
+}
+
+bool graph::is_weighted() {
+	return this->weighted;
 }
 
 void graph::dfs_spanning_tree(int v) {

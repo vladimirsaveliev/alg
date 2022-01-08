@@ -17,6 +17,7 @@ enum graph_state_t {
 struct edge_info
 {
 	bool connected;
+	int weight;
 	graph_state_t state;
 };
 
@@ -25,6 +26,7 @@ class graph
 private:
 	struct edge_info** table;
 	int n_vertex;
+	bool weighted;
 
 	void allocate_table();
 	void deallocate_table();
@@ -37,8 +39,9 @@ public:
 	~graph();
 	void print_graph();
 	void read_graph(istream &stream);
+	void read_wgraph(istream &stream);
 	void dfs_graph(int v);
 	void dfs_spanning_tree(int v);
-
+	bool is_weighted();
 };
 
