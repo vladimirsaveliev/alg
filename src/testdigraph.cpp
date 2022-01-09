@@ -16,6 +16,7 @@ extern "C" {
 			printf("   2 - dfs algorithm\n");
 			printf("   3 - read weighted graph\n");
 			printf("   4 - Jarnik algorithm(find min spannning tree)\n");
+			printf("   5 - Kruskal algorithm(find min spannning tree)\n");
 			printf("   0 - return to main menu\n");
 
 			scanf(" %c", &c);
@@ -69,6 +70,14 @@ extern "C" {
 					break;
 				}
 				g1.jarnik(g2);
+				g2.print_graph();
+				break;
+			case '5':
+				if (!g1.is_weighted()) {
+					cout << "Kruskal algorithm works only with weighted graph\n";
+					break;
+				}
+				g1.krusksal(g2);
 				g2.print_graph();
 				break;
 			case '0': 

@@ -19,7 +19,15 @@ struct edge_info
 	bool connected;
 	bool in_graph;
 	int weight;
+	int connected_component_id; // For Kruskal algorithm
 	graph_state_t state;
+};
+
+struct edge
+{
+	int start;
+	int end;
+	int weight;
 };
 
 class graph
@@ -27,6 +35,9 @@ class graph
 private:
 	struct edge_info** table;
 	int n_vertex;
+	struct edge* edges;
+	int n_edge;
+
 	bool weighted;
 
 	void allocate_table();
@@ -46,5 +57,6 @@ public:
 	void dfs_spanning_tree(int v);
 	bool is_weighted();
 	void jarnik(graph& mst);
+	void krusksal(graph& mst);
 };
 

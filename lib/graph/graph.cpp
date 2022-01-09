@@ -1,4 +1,4 @@
-#include <iomanip>
+﻿#include <iomanip>
 #include <iostream>
 #include "graph.h"
 
@@ -8,6 +8,8 @@ using namespace std;
 graph::graph() {
 	this->table = nullptr;
 	this->n_vertex = 0;
+	this->edges = nullptr;
+	this->n_edge = 0;
 }
 
 graph::~graph() {
@@ -71,11 +73,30 @@ void graph::read_wgraph(istream &stream) {
 	this->allocate_table();
 
 	while (stream >> id1 >> id2 >> id3) {
+		if (this->table[id1][id2].connected != false) {
+			cout << "Invalid data\n";
+			return;
+		}
 		this->table[id1][id2].connected = true;
 		this->table[id2][id1].connected = true;
 		this->table[id1][id2].weight = id3;
 		this->table[id2][id1].weight = id3;
+		this->n_edge++;
 	}
+
+	this->edges = new struct edge[this->n_edge];
+	int k = 0;
+	for (int i = 0; i < this->n_vertex; i++) {
+		for (int j = i; j < this->n_vertex; j++) {
+			if (this->table[i][j].connected == true) {
+				this->edges[k].start = i;
+				this->edges[k].end = j;
+				this->edges[k].weight = this->table[i][j].weight;
+				k++;
+			}
+		}
+	}
+
 
 	this->weighted = true;
 }
@@ -181,6 +202,59 @@ bool graph::spanning_tree_edge(graph &mst) {
 	 while (this->spanning_tree_edge(mst))
 		 ;
 }
+
+// Return true if this edge will be inserted to spanning tree
+bool uf_find(struct edge_info** table, struct edge *edge) {
+	return table[edge->start][edge->start].connected_component_id !=
+		table[edge->end][edge->end].connected_component_id;
+ }
+
+ void uf_union(struct edge_info** table, int table_size, struct edge *edge) {
+	 for (int i = 0; i < table_size; i++) {
+		 if (table[i][i].connected_component_id ==
+			 table[edge->end][edge->end].connected_component_id) {
+			 table[i][i].connected_component_id = 
+				 table[edge->start][edge->start].connected_component_id;
+		 }
+	 }
+ }
+
+ void select_sort_edges(struct edge* edges, int num) {
+	 for (int i = 0; i < num; i++) {
+		 int ind = i;
+		 for (int j = i + 1; j < num; j++) {
+			 if (edges[j].weight < edges[ind].weight) {
+				 ind = j;
+			 }
+		 }
+		 struct edge tmp = edges[i];
+		 edges[i] = edges[ind];
+		 edges[ind] = tmp;
+	 }
+ }
+
+ void graph::krusksal(graph& mst) {
+	 mst.deallocate_table();
+	 mst.n_vertex = this->n_vertex;
+	 mst.allocate_table();
+//	 (1) Sort the edges by weight : w(e1) < . . . < w(em)
+	 select_sort_edges(this->edges, this->n_edge);
+//	 (2) T := (V, ∅)
+	 for (int i = 0; i < mst.n_vertex; i++) {
+		 mst.table[i][i].in_graph = true;
+		 mst.table[i][i].connected_component_id = i;
+	 }
+//	 (3) For i = 1, . . . , m do
+	 for (int i = 0; i < this->n_edge; i++) {
+		 if (uf_find(mst.table, &this->edges[i])) {
+			 int u = this->edges[i].start;
+			 int v = this->edges[i].end;
+			 mst.table[u][v] = this->table[u][v];
+			 mst.table[v][u] = this->table[v][u];
+			 uf_union(mst.table, mst.n_vertex, &this->edges[i]);
+		 }
+	 }
+ }
 
 void graph::print_closed_vertices() {
 	for (int i = 0; i < this->n_vertex; i++) {
