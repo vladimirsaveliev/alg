@@ -15,6 +15,7 @@ extern "C" {
 			cout << "   \x1b[37;1m1 - create array with random numbers\x1b[0m\n";
 			cout << "   2 - sort with radix sort algorithm\n";
 			cout << "   3 - sort with quick sort algorithm\n";
+			cout << "   4 - lis algorithm\n";
 			cout << "   0 - exit\n";
 
 			cin >> c;
@@ -30,6 +31,17 @@ extern "C" {
 				arr.quick_sort();
 				arr.print_array();
 				break;
+			case '4':
+			{
+				cout << "Input array size:\n";
+				int ar_size;
+				cin >> ar_size;
+				sorted_array lis_arr(ar_size);
+				lis_arr.read_array();
+				lis_arr.lis_rec();
+				lis_arr.lis_iter();
+				break;
+			}
 			case '0':
 				return 0;
 			}

@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <math.h>
 #include "sortable_array.h"
+#include <iomanip>
 
 using namespace std;
 
@@ -9,6 +10,13 @@ struct arrayx {
 	int* arr;
 	int size;
 };
+
+void sorted_array::read_array() {
+	cout << "Input " << this->size << " elements into array:\n";
+	for (int i = 0; i < this->size; i++) {
+		cin >> this->arr[i];
+	}
+}
 
  int range_rand(int min, int max) {
 	int rc = 0;
@@ -195,6 +203,64 @@ void sorted_array::quick_sort() {
 	x.arr = this->arr;
 	x.size = this->size;
 	_quick_sort(&x);
+}
+
+int length_lis_rec(int j, int size, int* arr) {
+	int d = 1;
+	for (int i = j + 1; i < size; i++) {
+		if (arr[i] > arr[j]) {
+			int lis_j = 1 + length_lis_rec(i, size, arr);
+			if (d < lis_j) {
+				d = lis_j;
+			 }
+		}
+	}
+
+	return d;
+}
+
+// Longest increasing sequence (Recursive version)
+void sorted_array::lis_rec() {
+	int* tmp = new int[this->size + 1];
+	tmp[0] = INT_MIN;
+	for (int i = 0; i < this->size; i++) {
+		tmp[i + 1] = this->arr[i];
+	}
+	cout << "LIS rec equals: " << length_lis_rec(0, this->size, tmp) - 1 
+		 << "\n";
+
+	delete[] tmp;
+}
+
+//Longest Increasing Sequence (Iterative version)
+void sorted_array::lis_iter() {
+	int* tmp = new int[this->size + 1];
+	tmp[0] = INT_MIN;
+	for (int i = 0; i < this->size; i++) {
+		tmp[i + 1] = this->arr[i];
+	}
+	int* T = new int[this->size + 1];
+	int* P = new int[this->size + 1];
+	for (int i = this->size; i >= 0; i--) {
+		T[i] = 1;
+		P[i] = 0;
+		for (int j = i + 1; j <= this->size; j++) {
+			if (tmp[i] < tmp[j] && T[i] < 1 + T[j]) {
+				T[i] = 1 + T[j];
+				P[i] = j;
+			}
+		}
+	}
+	cout << "LIS iter equals " << T[0] - 1 << "\n";
+	int ind = 0;
+	while (P[ind] != 0) {
+		cout << setw(3) << tmp[P[ind]];
+		ind = P[ind];
+	}
+	cout << "\n";
+
+	delete[] tmp;
+	delete[] T;
 }
 
 void sorted_array::print_array() {

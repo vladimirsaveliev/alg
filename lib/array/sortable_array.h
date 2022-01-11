@@ -8,6 +8,7 @@ public:
 	sorted_array(int sizex);
 	sorted_array(int arrx[], int sizex);
 	~sorted_array();
+	void read_array();
 	void bubble_sort();
 	void select_sort();
 	void insert_sort();
@@ -16,5 +17,7 @@ public:
 	void radix_sort();
 	void randomizer(int min, int max);
 	void quick_sort();
+	void lis_rec();
+	void lis_iter();
 	void print_array();
 };

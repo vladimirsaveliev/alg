@@ -1,5 +1,6 @@
-#include <iostream>
+﻿#include <iostream>
 #include <fstream>
+#include <iomanip>
 #include "../lib/graph/Dijkstra.h"
 #include "../lib/graph/graph.h"
 
@@ -131,5 +132,103 @@ extern "C" {
 				return 0;
 			}
 		}
+	}
+/*
+	Consider an empty hash table of size 17 (slots with indices 0,…,16). 
+	Insert one by one the elements 19,69,53,52,27,18 (in this order) 
+	using OpenInsert from the lecture, double hashing strategy with 
+	thombstones, and the hash function h(k,i)=(6⋅k+i⋅(4⋅kmod7+1))mod17.
+	Then delete items 27,69 using OpenDelete from the lecture.
+	Finally, insert elements 29,37,18 using OpenInsert.
+	Write down the final hash table content from box 0 to 16 
+	as a sequence of numbers separated by commas. 
+	Write "-" if the slot is empty and "t" if the slot contains a 
+	thombstone.	
+*/
+#define TOMBSTONE INT_MAX 
+#define EMPTY INT_MIN
+
+	int hash_size;
+	int coef_k; 
+	int coef_2k;
+	int mod_int; 
+	int mod_ext; 
+	int plus_one;
+
+	int h(int key, int i) 
+	{
+		return (coef_k * key + i * (coef_2k * key % mod_int + plus_one)) % mod_ext;
+	}
+
+	bool insert_to_ht(int k, int* arr, int hasht_size) {
+		for (int i = 0; i < hasht_size; i++) {
+			int ind = h(k, i);
+			if (arr[ind] == EMPTY || arr[ind] == TOMBSTONE) {				
+				arr[ind] = k;
+				return true;
+			}
+		}
+
+		cout << "Insert failed\n";
+		return false;
+	}
+
+	bool delete_from_ht(int k, int* arr, int hasht_size) {
+		for (int i = 0; i < hasht_size; i++) {
+			int ind = h(k, i);
+			if (arr[ind] == k) {
+				arr[ind] = TOMBSTONE;
+				return true;
+			}
+			if (arr[ind] == EMPTY) {
+				break;
+			}
+		}
+
+		cout << "Delete failed\n";
+		return false;
+	}
+
+
+	void hash_function() {	
+		int k;
+		
+		cout << "h(k, i) = (6 * k + i * (4 * k mod7 + 1)) mod 17\n";
+		cout << "Example: 17 6 4 7 17 1\n";
+		cin >> hash_size;
+		cin >> coef_k;
+		cin >> coef_2k;
+		cin >> mod_int;
+		cin >> mod_ext;
+		cin >> plus_one;
+
+		int* arr = new int[hash_size];
+		for (int i = 0; i < hash_size; i++) {
+			arr[i] = EMPTY;
+		}
+
+		cout << "Enter numbers to insert:\n";
+		while (cin >> k) {
+			if (k >= 0) {
+				insert_to_ht(k, arr, hash_size);
+			}
+			if (k < 0) {
+				delete_from_ht(-k, arr, hash_size);
+			}
+			for (int i = 0; i < hash_size; i++) {
+				if (arr[i] == TOMBSTONE) {
+					cout << setw(5) << "T";
+				}
+				else if (arr[i] == EMPTY) {
+					cout << setw(5) << "-";
+				}
+				else {
+					cout << setw(5) << arr[i];
+				}
+			}
+			cout << "\n";
+		}
+		string c;
+		cin >> c;
 	}
 }
