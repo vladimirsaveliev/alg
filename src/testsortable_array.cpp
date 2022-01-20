@@ -16,6 +16,8 @@ extern "C" {
 			cout << "   2 - sort with radix sort algorithm\n";
 			cout << "   3 - sort with quick sort algorithm\n";
 			cout << "   4 - lis algorithm\n";
+			cout << "   5 - edit distance\n";
+			cout << "	6 - carpenter task\n";
 			cout << "   0 - exit\n";
 
 			cin >> c;
@@ -40,6 +42,27 @@ extern "C" {
 				lis_arr.read_array();
 				lis_arr.lis_rec();
 				lis_arr.lis_iter();
+				break;
+			}
+			case '5':
+			{
+				cout << "Input two strings:\n";
+				string s1, s2;
+				int a = 0;
+				int b = 0;
+				cin >> s1;
+				cin >> s2;
+				edit_distance_rec(s1, s2, 1, 1, &a, &b);
+				break;
+			}
+			case '6':
+			{
+				cout << "Input array size:\n";
+				int ar_size;
+				cin >> ar_size;
+				sorted_array plank(ar_size);
+				plank.read_array();
+				plank.carpenter_task(4, 10);
 				break;
 			}
 			case '0':

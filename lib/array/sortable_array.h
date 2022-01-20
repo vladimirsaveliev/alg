@@ -1,3 +1,5 @@
+using namespace std;
+
 class sorted_array
 {
 private:
@@ -19,5 +21,8 @@ public:
 	void quick_sort();
 	void lis_rec();
 	void lis_iter();
+	void carpenter_task(int D, int K);
 	void print_array();
 };
+
+int edit_distance_rec(string &s1, string &s2, int i, int j, int *tail_insert, int *tail_delete);

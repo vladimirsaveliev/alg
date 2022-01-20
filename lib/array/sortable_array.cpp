@@ -212,7 +212,7 @@ int length_lis_rec(int j, int size, int* arr) {
 			int lis_j = 1 + length_lis_rec(i, size, arr);
 			if (d < lis_j) {
 				d = lis_j;
-			 }
+			}
 		}
 	}
 
@@ -261,6 +261,169 @@ void sorted_array::lis_iter() {
 
 	delete[] tmp;
 	delete[] T;
+}
+
+/*
+	CuttingBoardPrice(i)
+		if prices[i] is set
+			return prices[i]
+		prices[i] = K
+		for j: 0..D-1
+			prices[i] -= P[i+j]
+		
+		return prices[i]
+*/
+
+int cutting_board_price(int i, int D, int K, int* plank, int N) {
+	int board_price;
+	board_price = K;
+	if (N - i < D) {
+		return INT_MIN;
+	}
+	for (int j = 0; j < D; j++) {
+		board_price -= plank[i + j];
+	}
+	
+	return board_price;
+}
+
+/*
+	return maximal total price of all cutting boards starting with i’th
+
+	CarpenterAlg(i)
+		length =  CuttingBoardPrice(i)
+		total[i] = length
+		for j: i..N - D + 1
+			if total[i] < length + CarpenterAlg(j + D)
+			total[i] = length + CarpenterAlg(j + D)
+		return total[i]
+*/
+
+void print_board(int board_price, int D, int i, int *plank, int N) {
+	cout << "board:" << board_price << ", starts from " << i << ", defect costs: ";
+	int end = i + D;
+	if (end > N) {
+		end = N;
+	}
+	for (int j = i; j < end; j++) {
+		cout << plank[j] << ", ";
+	}
+	cout << "\n";
+}
+
+
+int carpenter_rec(int i, int D, int K, int* plank, int N, int* solution) {
+	int total = 0;
+	int prev = -1;
+	int end = i + D;
+	if (end > N) {
+		end = N;
+	}
+	for (int j = i; j < end; j++) {
+		int board_price = cutting_board_price(j, D, K, plank, N);
+		print_board(board_price, D, j, plank, N);
+		int rest_price = carpenter_rec(j + D, D, K, plank, N, solution);
+		if (total < board_price + rest_price) {
+			total = board_price + rest_price;
+			cout << "Included index " << j << "\n";
+			if (prev != -1) {
+				solution[prev] = 0;
+				cout << "Excluded index " << prev << "\n";
+			}
+			solution[j] = 1;
+			prev = j;
+		}
+	}
+
+	return total;
+}
+
+
+void sorted_array::carpenter_task(int D, int K) {
+	int* solution = new int[this->size - D + 1]; // Element of this array is 1 if cutting board is in optimal selection
+	for (int i = 0; i < this->size - D + 1; i++) {
+		solution[i] = 0;
+	}
+	cout << "Total max price is: " << carpenter_rec(0, D, K, this->arr, this->size, solution) << "\n";
+	for (int i = 0; i < this->size - D + 1; i++) {
+		if (solution[i] != 0) {
+			print_board(cutting_board_price(i, D, K, this->arr, this->size), D, i, this->arr, this->size);
+		}
+	}
+	cout << "\n";
+}
+
+struct edit_distance_info {
+	int changes;
+	int deletes;
+	int inserts;
+} distance_info;
+
+// Edit distance (Recursive algorithm)
+// number of characters changed
+int edit_distance_rec(string &s1, string &s2, int i, int j, 
+					  int *tail_inserts, int *tail_deletes) {
+	if (i == 1 && j == 1) {
+		distance_info.changes = 0;
+		distance_info.deletes = 0;
+		distance_info.inserts = 0;
+	}
+	int arr[6] = { 0, 0, 0, 0, 0, 0 };
+	if (i > s1.length()) {
+		*tail_inserts = s2.length() - j + 1;
+		return s2.length() - j + 1;
+	}
+	if (j > s2.length()) {
+		*tail_deletes = s1.length() - i + 1;
+		return s1.length() - i + 1;
+	}
+	int l_change = edit_distance_rec(s1, s2, i + 1, j + 1, &arr[0], &arr[1]);
+	if (s1[i - 1] != s2[j - 1]) {
+		l_change++;
+	}
+	int l_delete = 1 + edit_distance_rec(s1, s2, i + 1, j, &arr[2], &arr[3]);
+	int l_insert = 1 + edit_distance_rec(s1, s2, i, j + 1, &arr[4], &arr[5]);
+
+	if (l_change <= l_delete && l_change <= l_insert) {
+		if (s1[i - 1] != s2[j - 1]) {
+			distance_info.changes++;
+		}
+		distance_info.inserts += arr[0];
+		distance_info.deletes += arr[1];
+		if (i == 1 && j == 1) {
+			cout << "Edit distance: " << l_change <<
+				", inserts: " << distance_info.inserts <<
+				", deletes: " << distance_info.deletes <<
+				", changes: " << distance_info.changes <<
+				"\n";
+		}
+		return l_change;
+	}
+	if (l_delete <= l_change && l_delete <= l_insert) {
+		distance_info.deletes++;
+		distance_info.inserts += arr[2];
+		distance_info.deletes += arr[3];
+		if (i == 1 && j == 1) {
+			cout << "Edit distance: " << l_delete <<
+				", inserts: " << distance_info.inserts <<
+				", deletes: " << distance_info.deletes <<
+				", changes: " << distance_info.changes <<
+				"\n";
+		}
+		return l_delete;
+	}
+	distance_info.inserts++;
+	distance_info.inserts += arr[4];
+	distance_info.deletes += arr[5];
+	if (i == 1 && j == 1) {
+		cout << "Edit distance: " << l_insert <<
+			", inserts: " << distance_info.inserts <<
+			", deletes: " << distance_info.deletes <<
+			", changes: " << distance_info.changes <<
+			"\n";
+	}
+
+	return l_insert;
 }
 
 void sorted_array::print_array() {
