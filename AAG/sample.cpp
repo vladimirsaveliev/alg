@@ -951,7 +951,7 @@ DFA intersect(const NFA& a, const NFA& b) {
     print_dfa("result of determinization", dfa);
     
     dfa = unreachable_states_removal(dfa);
-
+    
     dfa = dfa_minimization(dfa);
     print_dfa("result of minimization", dfa);
     return dfa;
@@ -1031,7 +1031,7 @@ void print_dfa(std::string text, const DFA& a) {
 /**
  * These are examples from lecture 3
  */
-void test_nfa2dfa()
+void test_nfa2dfa(void)
 {
     /* lecture 3, p. 4 */
     NFA m {
@@ -1048,7 +1048,7 @@ void test_nfa2dfa()
         1,
         {4},
     };
-
+    
     print_dfa("test on page 4", nfa2dfa(m));
     std::cout << std::endl;
 
@@ -1064,6 +1064,33 @@ void test_nfa2dfa()
         {2},
     };
     print_dfa("test on page 6", nfa2dfa(m2));
+    std::cout << std::endl;
+    
+    
+}
+
+void test_dfa2mindfa(void)
+{
+    /* test form https://www.youtube.com/watch?v=0XaGAkY09Wc */
+    DFA m {
+        {0, 1, 2, 3, 4}, // A, B, C, D, E
+        {'0', '1'},
+        {
+            {{0, '0'}, 1}, // (A, 0) -> B
+            {{0, '1'}, 2}, // (A, 1) -> C
+            {{1, '0'}, 1}, // (B, 0) -> B
+            {{1, '1'}, 3}, // (B, 1) -> D
+            {{2, '0'}, 1}, // (C, 0) -> B
+            {{2, '1'}, 2}, // (C, 1) -> C
+            {{3, '0'}, 1}, // (D, 0) -> B
+            {{3, '1'}, 4}, // (D, 1) -> E
+            {{4, '0'}, 1}, // (E, 0) -> B
+            {{4, '1'}, 2}, // (E, 1) -> C
+        },
+        0,
+        {4},
+    };
+    print_dfa("min", dfa_minimization(m));
     std::cout << std::endl;
 }
 
@@ -1089,6 +1116,8 @@ int main()
     return 0;
 #endif
     test_nfa2dfa();
+    
+    test_dfa2mindfa();
     return 0;
 
 #if 1
