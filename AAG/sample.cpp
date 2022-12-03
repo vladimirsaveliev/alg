@@ -284,7 +284,7 @@ DFA DFAx::dfax2dfa()
 
 void DFAx::print(const std::string& txt)
 {
-    std::cout << "DFA: ";
+    std::cout << "DFAx: ";
     FAx::print(txt);
     std::cout << "Transitions:\n";
     int counter = 0;
@@ -729,8 +729,11 @@ DFA nfa_determinization(const NFA& a) {
     
 }
 
-
-DFAx nfa2dfax(const NFA& a)
+/**
+ * Convert NFA \a a to DFA
+ * Subset construction algorithm (Lecture 3, p. 3)
+ */
+DFA nfa2dfa(const NFA& a)
 {
     DFAx dfax;
     
@@ -781,16 +784,9 @@ DFAx nfa2dfax(const NFA& a)
         }
     }
     
-    dfax.print("result of determninization");
-    return dfax;
-}
-
-DFA nfa_determinization_new(const NFA& a)
-{
-    DFAx dfax = nfa2dfax(a);
+    dfax.print("determinized");
     return dfax.dfax2dfa();
 }
-
 
 // DFA minimization using partinioning method
 // Lecture 3. p. 31
@@ -882,9 +878,9 @@ DFA unify(const NFA& a, const NFA& b) {
 }
 
 /**
- *
+ * Intersection two NFAs using parallel run algorithm (Lecture 3, p. 17)
  */
-NFAx intersect_nfa(const NFA& a, const NFA& b)
+NFA intersect_nfa(const NFA& a, const NFA& b)
 {
     NFAx nfax;
 
@@ -941,19 +937,23 @@ NFAx intersect_nfa(const NFA& a, const NFA& b)
     print_nfa("Automat b:\n", b1);
     nfax.print("a, b intersect");
 
-    return nfax;
+    return nfax.nfax2nfa();
 }
 
 // Intersection algorithm (Lecture 3, p. 17)
 DFA intersect(const NFA& a, const NFA& b) {
     reset_combined_states();
     
-    NFAx nfax = intersect_nfa(a, b);
-    NFA nfa = nfax.nfax2nfa();
+    NFA nfa = intersect_nfa(a, b);
     print_nfa("result of intersect", nfa);
     
-    DFA dfa;
+    DFA dfa = nfa2dfa(nfa);
+    print_dfa("result of determinization", dfa);
     
+    dfa = unreachable_states_removal(dfa);
+
+    dfa = dfa_minimization(dfa);
+    print_dfa("result of minimization", dfa);
     return dfa;
 }
 
@@ -1028,8 +1028,48 @@ void print_dfa(std::string text, const DFA& a) {
     std::cout << "\tInitial State [ " << a.m_InitialState << " ]\n";
 }
 
+/**
+ * These are examples from lecture 3
+ */
+void test_nfa2dfa()
+{
+    /* lecture 3, p. 4 */
+    NFA m {
+        {1, 2, 3, 4}, // q, q0, q1, qf
+        {'0', '1'},
+        {
+            {{1, '0'}, {1, 2}},
+            {{1, '1'}, {1, 3}},
+            {{2, '0'}, {2, 4}},
+            {{2, '1'}, {2}},
+            {{3, '0'}, {3}},
+            {{3, '1'}, {3, 4}},
+        },
+        1,
+        {4},
+    };
+
+    print_dfa("test on page 4", nfa2dfa(m));
+    std::cout << std::endl;
+
+    /* lecture 3, p. 6 */
+    NFA m2 {
+        {1, 2}, // z, f
+        {'a', 'b'},
+        {
+            {{1, 'a'}, {1, 2}},
+            {{2, 'b'}, {2}}
+        },
+        1,
+        {2},
+    };
+    print_dfa("test on page 6", nfa2dfa(m2));
+    std::cout << std::endl;
+}
+
 int main()
 {
+#if 0
     /* test from https://www.youtube.com/watch?v=i-fk9o46oVY */
     NFA x {
         {1, 2, 3}, /* A, B, C */
@@ -1047,22 +1087,9 @@ int main()
     DFA dfa = nfa_determinization_new(x);
     print_dfa("result of determinization: ", dfa);
     return 0;
-    
-    // Automat from lecture 3, p. 4
-    NFA test1 {
-        {1, 2, 3, 4}, // q, q0, q1, qf
-        {'0', '1'},
-        {
-            {{1, '0'}, {1, 2}},
-            {{1, '1'}, {1, 3}},
-            {{2, '0'}, {2, 4}},
-            {{2, '1'}, {2}},
-            {{3, '0'}, {3}},
-            {{3, '1'}, {3, 4}},
-        },
-        1,
-        {4},
-    };
+#endif
+    test_nfa2dfa();
+    return 0;
 
 #if 1
     NFA test02{
@@ -1239,6 +1266,7 @@ int main()
         0,
         {2},
     };
+    std::cout << "Test a\n";
     assert(intersect(a1, a2) == a);
     return 0;
 
