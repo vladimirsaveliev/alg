@@ -1,6 +1,6 @@
 // #include <config.h>
 #include <stdio.h>
-#include <malloc.h>
+/*#include <malloc.h>*/
 #include <stdlib.h>
 
 #include "../lib/bst/avl.h"

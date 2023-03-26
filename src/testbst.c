@@ -1,6 +1,8 @@
 // #include <config.h>
 #include <stdio.h>
-#include <malloc.h>
+#include <stdlib.h>
+
+/*#include <malloc.h>*/
 #include "../lib/bst/bst.h"
 
 /*

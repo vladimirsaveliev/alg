@@ -10,6 +10,7 @@ int testsortable_array(void);
 int testdigraph(void);
 int testgraph(void);
 void hash_function();
+int testcrypt(void);
 
 int main(void)
 {
@@ -25,39 +26,52 @@ int main(void)
 		printf("5 - sortable array\n");
 		printf("6 - graph\n");
 		printf("7 - digraph\n");
-		printf("8 - hash fucntion\n");
+		printf("8 - hash function\n");
+		printf("9 - crypt tests\n");
 		printf("0 - quit\n");
 		scanf(" %c", &c);
-		switch (c) {
-		case '1':
+		switch (c) {		
+                    case '1':
 			testbst();
 			break;
-		case '2':
+		
+                    case '2':
 			testavl();
 			break;
-		case '3':
+                        
+                    case '3':
 			printf("not ready\n");
 			break;
 /*			testgcd();
 			break;*/
-		case '4':
+
+                    case '4':
 			printf("not ready\n");
 			break;
 /*			test2darray();
 			break;*/
-		case '5':
+
+                    case '5':
 			testsortable_array();
 			break;
-		case '6':
-			testgraph();
+		
+                    case '6':
+			/*testgraph();*/
 			break;
-		case '7':
-			testdigraph();
+		
+                    case '7':
+			/*testdigraph();*/
 			break;
-		case '8':
-			hash_function();
+		
+                    case '8':
+			/*hash_function();*/
 			break;
-		case '0':
+                        
+                    case '9':
+                        testcrypt();
+                        break;
+                        
+                    case '0':
 			exit(0);
 		}
 	}
